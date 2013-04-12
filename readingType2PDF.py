@@ -8,7 +8,7 @@ class TimeParsing:
     def individual(self,filename, writeFilename):
         f = open(filename, 'r')
         r = open(writeFilename,'w')
-        
+        writeList=[]
         currentRiders = []
         for line in f:
             if line[:2]=="No":
@@ -55,14 +55,15 @@ class TimeParsing:
 
                     line = f.next()
                 if write:
-                    json.dump(JSON,r)   
+                    writeList.append(JSON)
         f.close()
+        json.dump(writeList,r)       
         r.close()                        
                             
     def team(self,filename, writeFilename):
         f = open(filename, 'r')
         r = open(writeFilename,'w')
-        
+        writeList=[]
         currentRiders = []
         for line in f:
             if line[:2]=="No":
@@ -108,10 +109,11 @@ class TimeParsing:
 
                     line = f.next()
                 if write:
-                    json.dump(JSON,r)
+                    writeList.append(JSON)
                 else:
                     print filename
         f.close()
+        json.dump(writeList,r)        
         r.close()                      
         
 

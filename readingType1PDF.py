@@ -8,6 +8,7 @@ class TimeParsing:
     def individual(self,filename, writeFilename):
         f = open(filename, 'r')
         r = open(writeFilename,'w')
+        writeList = []
         for line in f:
             if ('Heat' in line) or ('BRONZE' in line) or ('GOLD' in line):
                 line = line.rstrip('\n')
@@ -66,13 +67,16 @@ class TimeParsing:
                         newtemp = f.next()
 
                     if write:
-                        json.dump(JSON,r)       
+                        writeList.append(JSON)
+                                                
         f.close()
+        json.dump(writeList,r)        
         r.close()                        
                             
     def team(self,filename, writeFilename):
         f = open(filename, 'r')
         r = open(writeFilename,'w')
+        writeList = []
         for line in f:
             if ('Heat' in line) or ('BRONZE' in line) or ('GOLD' in line):
                 line = line.rstrip('\n')
@@ -127,8 +131,9 @@ class TimeParsing:
                         newtemp = f.next()
 
                     if write:
-                        json.dump(JSON,r)            
+                        writeList.append(JSON)                
         f.close()
+        json.dump(writeList,r)        
         r.close()             
         
 
