@@ -1,8 +1,9 @@
 import json
-from pprint import pprint
 import sys
 from datetime import datetime, timedelta
-
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.mlab as mlab
 
 class SplitTime():
     def __init__(self):
@@ -32,11 +33,16 @@ class SplitTime():
         self.startTimesTS = []
         self.startTimesTSMens = []   
         self.startTimesTSWomens = []   
+        self.countOfRiders = 0
+        self.laps = 0
 
                 
     def readFile(self,filename):
         json_data=open(filename,'r')
         data = json.load(json_data)
+        for rider in data:
+            self.countOfRiders+=1
+            self.laps+=len(rider['Laps'])
         self.addTimes(data,self.allTimes)
 
         if filename.find('Men')>0:
@@ -132,7 +138,8 @@ def main():
     for filename in sys.argv[1:]:
         #print filename
         st.readFile(filename)
-                        
+    print 'total number of racers: '+str(st.countOfRiders)          
+    print 'total number of laps: ' + str(st.laps/2)
     print 'Average of All Times: '+str(sumTimeDeltas(st.allTimes)/len(st.allTimes))
     print 'Average of Mens Times: '+str(sumTimeDeltas(st.MensTimes)/len(st.MensTimes))
     print 'Average of Womens Times: '+str(sumTimeDeltas(st.WomensTimes)/len(st.WomensTimes))
@@ -154,9 +161,22 @@ def main():
     print ' '
 
 
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    n, bins, patches = ax.hist(timedeltaListtoFloat(st.allTimes), 100)
+    # hist uses np.histogram under the hood to create 'n' and 'bins'.
+    # np.histogram returns the bin edges, so there will be 50 probability
+    # density values in n, 51 bin edges in bins and 50 patches.  To get
+    # everything lined up, we'll compute the bin centers
+    bincenters = 0.5*(bins[1:]+bins[:-1])
+    # add a 'best fit' line for the normal PDF
 
+    ax.set_xlabel('Lap Time')
+    ax.set_ylabel('Count of lap times')
+    #ax.set_title(r'$\mathrm{Histogram\ of\ IQ:}\ \mu=100,\ \sigma=15$')
+    ax.grid(True)   
 
-
+    plt.show()
 
 def sumTimeDeltas(listOfTd):
     sumTD = timedelta()
@@ -164,6 +184,11 @@ def sumTimeDeltas(listOfTd):
         sumTD+=x
     return sumTD
 
+def timedeltaListtoFloat(timedeltas):
+    returnlist = []
+    for x in timedeltas:
+        returnlist.append(x.seconds + x.microseconds / 1E6)
+    return returnlist
 
 if __name__=="__main__":
     main()

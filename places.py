@@ -45,8 +45,13 @@ def main():
     for filename in sys.argv[1:]:
         #print filename
         st.readFile(filename)
-    
-    pprint(st.CountryPlaceListDict)
+    for country in st.CountryPlaceListDict:
+        podiums = 0
+        for result in st.CountryPlaceListDict[country]:
+            if result in [1,2,3]:
+                podiums+=1
+        print country + '\t' + str(len(st.CountryPlaceListDict[country]))+'\t' + str(podiums)
+
 
 if __name__=="__main__":
     main()
