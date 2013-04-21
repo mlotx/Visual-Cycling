@@ -54,37 +54,42 @@ class RaceStats():
 
         return timeObject
                     
+
                 
 
 
 
 def main():
     st = RaceStats()
-    print 'Number of Races:', len(sys.argv), 'files'
-   
+    
     inputRace = "TeamPursuit"
-    inputGender = "Mens"
+    inputGender = "Men"
     inputYear = "2011"
     inputLocation = "Cali"
-    inputRacetype ="Qualifying"
+    inputRacetype ="Final"
 
 
   
     for filename in sys.argv[1:]:
         st.readFile(filename, race = inputRace,  year = inputYear, location = inputLocation, gender = inputGender,racetype =inputRacetype)
 
-
+    labels = []
+    plotingPlots = []
+    
     for rider in st.LapTimeDict:
+        tempPlace = rider
         testing = st.LapTimeDict[rider]
-
         newdates = []
+        labels.append(str(tempPlace))
+        
+        
         for item in testing:
             newdates = [md.date2num(item) for item in testing]
+            p, = plt.plot(newdates)
+            plotingPlots.append(p)
+        
 
-        
-        
-        plt.plot(newdates)
-    
+    plt.legend(plotingPlots, labels, loc = 9, ncol= 5)
     plt.ylabel('time')
     plt.show()
 
