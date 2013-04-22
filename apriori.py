@@ -186,10 +186,10 @@ items = ['handicapped-infants',
 
 
 def main():
-    dataset = csv.reader(open("csvs/menTP.csv", "r"))
+    dataset = csv.reader(open("csvs/womenTP.csv", "r"))
     goods = defaultdict(list)
-    minSup = 0.01
-    minConf = 0.7
+    minSup = 0.07
+    minConf = .6
     
         
     a = Apriori(dataset, minSup, minConf)
@@ -198,11 +198,14 @@ def main():
     count = 0
     rules = a.makeRules(finalItemsets)
     cur_max = 0
+    maxsupport = 0
     for rule in rules:
         local_max = len(rule[0]) + len(rule[1])
         if local_max > cur_max:
             cur_max = local_max
         count += 1
+        if float(rule[3])>maxsupport:
+            maxsupport=float(rule[3])
         print count, " Rule: ", rule[0], " --> ", rule[1]
         print '\t Frequency: ', rule[2]
         print '\t Support: ', rule[3]
@@ -211,7 +214,7 @@ def main():
         print '\t Conf: ', rule[6]
 
     print 'Longest rule length: ', cur_max
-    
+    print 'max support: '+str(maxsupport)
 
 if __name__=="__main__":
     main()
