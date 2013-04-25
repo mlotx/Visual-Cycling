@@ -45,13 +45,22 @@ class Places():
                 tmpString.replace(' ','')
                 tmp.append(unicodedata.normalize('NFKD', tmpString).encode('ascii','ignore'))
 
+            perviouslap = -1000
             for lap in racer['Laps']:
                 if lap['splitDistance']%250==0:
                     try:
-                        tmp.append(int(lap['place']))
+                        print perviouslap
+                        if int(lap['place']) == -1:
+                            tmp=[]
+                            break
+                        if lap['splitDistance']==250:
+                            perviouslap = int(lap['place'])
+                        else:
+                            tmp.append(perviouslap - int(lap['place']))
+                            perviouslap = int(lap['place'])                            
                     except:
                         tmp=[]
-                        break;
+                        break
             if len(tmp)>0:
                 toFile.append(tmp)    
         csvWriter.writerows(toFile)
@@ -81,7 +90,10 @@ class Places():
         for x in writeData:
             count = 1
             while (count<len(x)):
-                x[count] = 'Lap-'+str(count)+'-Place-'+str(x[count])
+                if x[count]>0:
+                    x[count] = 'Lap-'+str(count+1)+'-Place-+'+str(x[count])
+                else:
+                    x[count] = 'Lap-'+str(count+1)+'-Place-'+str(x[count])                    
                 count+=1
             writer.writerow(x)
 
