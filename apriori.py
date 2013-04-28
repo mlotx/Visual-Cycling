@@ -164,37 +164,20 @@ class Apriori:
         return Rules
                             
 
-
-
-
-items = ['handicapped-infants',
-'water-project-cost-sharing',
-'adoption-of-the-budget-resolution', 
-'physician-fee-freeze',
-'el-salvador-aid',
-'religious-groups-in-schools',
-'anti-satellite-test-ban',
-'aid-to-nicaraguan-contras', 
-'mx-missile',
-'immigration', 
-'synfuels-corporation-cutback',
-'education-spending',
-'superfund-right-to-sue', 
-'crime',
-'duty-free-exports',
-'export-administration-act-south-africa']
-
-
 def main():
-    dataset = csv.reader(open("csvs/womenTP.csv", "r"))
-    goods = defaultdict(list)
-    minSup = 0.07
-    minConf = .6
+    rulesCSV = open('csvs/rules.csv','wb')
+    rulesWriter = csv.writer(rulesCSV)
+    rulesWriter.writerow(['Event','Cause','Effect','Frequency','Support','Conf_Num','Conf_Dem','Conf'])
+
     
-        
+
+
+    dataset = csv.reader(open("csvs/menKilo.csv", "r"))
+    goods = defaultdict(list)
+    minSup = 0.13
+    minConf = .4
     a = Apriori(dataset, minSup, minConf)
     finalItemsets = a.generate_Associations()
-    
     count = 0
     rules = a.makeRules(finalItemsets)
     cur_max = 0
@@ -212,7 +195,153 @@ def main():
         print '\t Conf Num: ', rule[5]
         print '\t Conf Den: ', rule[4]
         print '\t Conf: ', rule[6]
+        rulesWriter.writerow(['menkilo',rule[0],rule[1],rule[2],rule[3],rule[5],rule[4],rule[6]])
+    print 'Longest rule length: ', cur_max
+    print 'max support: '+str(maxsupport)
 
+
+
+
+    dataset = csv.reader(open("csvs/menIP.csv", "r"))
+    goods = defaultdict(list)
+    minSup = 0.4
+    minConf = .8
+    a = Apriori(dataset, minSup, minConf)
+    finalItemsets = a.generate_Associations()
+    count = 0
+    rules = a.makeRules(finalItemsets)
+    cur_max = 0
+    maxsupport = 0
+    for rule in rules:
+        local_max = len(rule[0]) + len(rule[1])
+        if local_max > cur_max:
+            cur_max = local_max
+        count += 1
+        if float(rule[3])>maxsupport:
+            maxsupport=float(rule[3])
+        print count, " Rule: ", rule[0], " --> ", rule[1]
+        print '\t Frequency: ', rule[2]
+        print '\t Support: ', rule[3]
+        print '\t Conf Num: ', rule[5]
+        print '\t Conf Den: ', rule[4]
+        print '\t Conf: ', rule[6]
+        rulesWriter.writerow(['menIP',rule[0],rule[1],rule[2],rule[3],rule[5],rule[4],rule[6]])
+    print 'Longest rule length: ', cur_max
+    print 'max support: '+str(maxsupport)
+
+
+
+    dataset = csv.reader(open("csvs/menTP.csv", "r"))
+    goods = defaultdict(list)
+    minSup = 0.51
+    minConf = .8
+    a = Apriori(dataset, minSup, minConf)
+    finalItemsets = a.generate_Associations()
+    count = 0
+    rules = a.makeRules(finalItemsets)
+    cur_max = 0
+    maxsupport = 0
+    for rule in rules:
+        local_max = len(rule[0]) + len(rule[1])
+        if local_max > cur_max:
+            cur_max = local_max
+        count += 1
+        if float(rule[3])>maxsupport:
+            maxsupport=float(rule[3])
+        print count, " Rule: ", rule[0], " --> ", rule[1]
+        print '\t Frequency: ', rule[2]
+        print '\t Support: ', rule[3]
+        print '\t Conf Num: ', rule[5]
+        print '\t Conf Den: ', rule[4]
+        print '\t Conf: ', rule[6]
+        rulesWriter.writerow(['menTP',rule[0],rule[1],rule[2],rule[3],rule[5],rule[4],rule[6]])
+    print 'Longest rule length: ', cur_max
+    print 'max support: '+str(maxsupport)
+
+
+
+    dataset = csv.reader(open("csvs/menTS.csv", "r"))
+    goods = defaultdict(list)
+    minSup = 0.1
+    minConf = 0.1
+    a = Apriori(dataset, minSup, minConf)
+    finalItemsets = a.generate_Associations()
+    count = 0
+    rules = a.makeRules(finalItemsets)
+    cur_max = 0
+    maxsupport = 0
+    for rule in rules:
+        local_max = len(rule[0]) + len(rule[1])
+        if local_max > cur_max:
+            cur_max = local_max
+        count += 1
+        if float(rule[3])>maxsupport:
+            maxsupport=float(rule[3])
+        print count, " Rule: ", rule[0], " --> ", rule[1]
+        print '\t Frequency: ', rule[2]
+        print '\t Support: ', rule[3]
+        print '\t Conf Num: ', rule[5]
+        print '\t Conf Den: ', rule[4]
+        print '\t Conf: ', rule[6]
+        rulesWriter.writerow(['menTS',rule[0],rule[1],rule[2],rule[3],rule[5],rule[4],rule[6]])
+    print 'Longest rule length: ', cur_max
+    print 'max support: '+str(maxsupport)
+
+
+
+    dataset = csv.reader(open("csvs/womenIP.csv", "r"))
+    goods = defaultdict(list)
+    minSup = 0.4
+    minConf = 0.7
+    a = Apriori(dataset, minSup, minConf)
+    finalItemsets = a.generate_Associations()
+    count = 0
+    rules = a.makeRules(finalItemsets)
+    cur_max = 0
+    maxsupport = 0
+    for rule in rules:
+        local_max = len(rule[0]) + len(rule[1])
+        if local_max > cur_max:
+            cur_max = local_max
+        count += 1
+        if float(rule[3])>maxsupport:
+            maxsupport=float(rule[3])
+        print count, " Rule: ", rule[0], " --> ", rule[1]
+        print '\t Frequency: ', rule[2]
+        print '\t Support: ', rule[3]
+        print '\t Conf Num: ', rule[5]
+        print '\t Conf Den: ', rule[4]
+        print '\t Conf: ', rule[6]
+        rulesWriter.writerow(['womenIP',rule[0],rule[1],rule[2],rule[3],rule[5],rule[4],rule[6]])
+    print 'Longest rule length: ', cur_max
+    print 'max support: '+str(maxsupport)
+
+
+
+    dataset = csv.reader(open("csvs/womenTP.csv", "r"))
+    goods = defaultdict(list)
+    minSup = 0.4
+    minConf = 0.7
+    a = Apriori(dataset, minSup, minConf)
+    finalItemsets = a.generate_Associations()
+    count = 0
+    rules = a.makeRules(finalItemsets)
+    cur_max = 0
+    maxsupport = 0
+    for rule in rules:
+        local_max = len(rule[0]) + len(rule[1])
+        if local_max > cur_max:
+            cur_max = local_max
+        count += 1
+        if float(rule[3])>maxsupport:
+            maxsupport=float(rule[3])
+        print count, " Rule: ", rule[0], " --> ", rule[1]
+        print '\t Frequency: ', rule[2]
+        print '\t Support: ', rule[3]
+        print '\t Conf Num: ', rule[5]
+        print '\t Conf Den: ', rule[4]
+        print '\t Conf: ', rule[6]
+        rulesWriter.writerow(['womenTP',rule[0],rule[1],rule[2],rule[3],rule[5],rule[4],rule[6]])
     print 'Longest rule length: ', cur_max
     print 'max support: '+str(maxsupport)
 
