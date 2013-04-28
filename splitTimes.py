@@ -1,5 +1,9 @@
+import copy
+import csv
 import json
+import math
 import sys
+import pprint
 from datetime import datetime, timedelta
 
 class SplitTime():
@@ -36,7 +40,6 @@ class SplitTime():
         JsonToDump['WomensTeamSprint']=self.WomensTeamSprint
         JsonToDump['MensKiloStart'] = self.MensKiloStart
         JsonToDump['MensKilo'] = self.MensKilo
-        print JsonToDump
         json.dump(JsonToDump,jsonFile)
         jsonFile.close()
                 
@@ -82,6 +85,45 @@ class SplitTime():
         return timeObject
 
 
+class SplitTimeCSV():
+    def __init__(self):
+        jsonFile = open('lapTimes.json','r')
+        data = json.load(jsonFile)
+        countList = {}
+        races = []
+        for x in data:
+            races.append(x)
+            countList[x]=0
+        splitLapCountDict = {}
+        #12.477
+        #25.867
+        x=12.25
+        while x<26:
+            splitLapCountDict[x]=copy.deepcopy(countList)
+            x+=.25
+        for raceType in data:
+            print raceType
+            for split in data[raceType]:
+                floorSplit = math.floor(split)
+                if split<floorSplit+.25:
+                    splitLapCountDict[floorSplit][raceType]+=1
+                elif split<floorSplit+.5:
+                    splitLapCountDict[floorSplit+.25][raceType]+=1
+                elif split<floorSplit+.75:
+                    splitLapCountDict[floorSplit+.5][raceType]+=1
+                elif split<floorSplit+1:
+                    splitLapCountDict[floorSplit+.75][raceType]+=1
+        pp = pprint.PrettyPrinter(indent=4)
+        pp.pprint(splitLapCountDict)
+        
+        lapSplitCSV = open('csvs/lapSplit.csv','wb')
+        lapSplitWriter = csv.writer(lapSplitCSV)
+        lapSplitWriter.writerow(['Time']+races)
+        for lapTime in sorted(splitLapCountDict.keys()):
+            lapSplitWriter.writerow([lapTime]+splitLapCountDict[lapTime].values())
+
+                
+
 def main():
     st = SplitTime()
     print 'Number of Races:', len(sys.argv), 'files'
@@ -89,6 +131,8 @@ def main():
         #print filename
         st.readFile(filename)
     st.finish()
+
+    SplitTimeCSV()
 
 
 if __name__=="__main__":
