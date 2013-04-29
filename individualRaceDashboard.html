@@ -64,6 +64,8 @@
 			<option value="Pruszkow">Pruszkow</option>
 			<option value="Astana">Astana</option>
 			<option value="Copenhagen">Copenhagen</option>
+			<option value="Glasgow">Glasgow</option>
+			<option value="London">London</option>
 			<option value="Manchester">Manchester</option>
 			<option value="Melbourne">Melbourne</option>
 			</select>
@@ -76,9 +78,9 @@
 			
 			<div align="right">
 			<select id="eventdropdown">
-			<option value="IndividualPursuit">IndividualPursuit</option>
-			<option value="TeamPursuit">TeamPursuit</option>
-			<option value="TeamSprint" selected>TeamSprint</option>
+			<option value="IndividualPursuit">Individual Pursuit</option>
+			<option value="TeamPursuit">Team Pursuit</option>
+			<option value="TeamSprint" selected>Team Sprint</option>
 			<option value="Kilometer">Kilometer</option>
 			</select>
 			
@@ -98,7 +100,7 @@
 		
 		
 		
-		var margin = {top: 20, right: 80, bottom: 50, left: 50},
+		var margin = {top: 50, right: 80, bottom: 50, left: 50},
 			width = 960 - margin.left - margin.right,
 			height = 550 - margin.top - margin.bottom;
 			
@@ -138,7 +140,7 @@
 		var yearShow = getyear.options[getyear.selectedIndex].text;
 		var locationShow = l.options[l.selectedIndex].text;
 		var genderShow = g.options[g.selectedIndex].text;
-		var eventShow = e.options[e.selectedIndex].text;
+		var eventShow = e.options[e.selectedIndex].value;
 		var typeShow = "Qualifying";
 		
 		var change = false;
@@ -151,7 +153,6 @@
 		
 		if(change === false){
 			alert("Sorry! That event does not exist.");
-			
 		}
 		
 		d3.csv("IndividualRaceDashboardData\\"+filename+".csv", function(data){
@@ -168,7 +169,12 @@
 						};
 					  });
 					  
-					  x.domain(d3.extent(data, function(d) { return d.lap; }));
+					  //x.domain(d3.extent(data, function(d) { return d.lap; }));
+					  x.domain([
+						
+						d3.min(teams, function(c) { return d3.min(c.values, function(v) { return v.lap; }); }),
+						d3.max(teams, function(c) { return d3.max(c.values, function(v) { return v.lap; }); })
+					  ]);
 
 					  y.domain([
 						d3.min('0'),
@@ -176,26 +182,26 @@
 						d3.max(teams, function(c) { return d3.max(c.values, function(v) { return v.place; }); })
 					  ]);
 
-					  svg.append("text")
+					 svg.append("text")
 						.attr("x", (width / 2))             
 						.attr("y", 0 - (margin.top / 2))
 						.attr("text-anchor", "middle")  
 						.style("font-size", "16px") 
 						.style("text-decoration", "underline")  
-						.text(filename);
-					  
+						.text(filename); 
 					  
 					  
 					  svg.append("g")
 						  .attr("class", "x axis")
+						  .call(xAxis)
 						  .attr("text-anchor", "middle")
 						  .attr("transform", "translate(0," + height + ")")
-						  .call(xAxis)
+						  
 						  .append("text")
 						  .attr("x", width/2)
 						  .attr("y", 30 )
 						  
-						  .text("Meters");
+						  .text("Lap");
 
 					  svg.append("g")
 						  .attr("class", "y axis")
