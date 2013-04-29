@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.dot {
+  stroke: #000;
+}
+
+</style>
+<body>
+<div style="text-align: center;">
+    <a href="index.php"><img class="banner" src="images/logo.png"/></a>
+</div>
+
+
+
+<div align="right">
+			<select id="allfiles">
+			<option value="AllKilometer"  >Kilometer</option>
+			<option value="AllIndividualPursuit" selected>Individual Pursuit</option>
+			<option value="AllTeamPursuit">Team Pursuit</option>
+			<option value="AllTeamSprint">Team Sprint</option>
+			</select>
+			<form><input type=button value="Submit" onClick="history.go()"></form> 
+
+
+
+
+
+<script src="d3/d3.v3.js"></script>
+<script>
+
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.scale.linear()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var color = d3.scale.category10();
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left");
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	
+var filename = "ClusterDashboardData\\AllTeamPursuit.csv";
+var getfile = document.getElementById("allfiles");		
+var fileShow = getfile.options[getfile.selectedIndex].value;
+filename ="ClusterDashboardData\\"+fileShow+".csv";	
+
+d3.csv(filename, function(data) {
+  data.forEach(function(d) {
+    d.position = +d.Position;
+    d.changes = +d.Changes;
+	d.cluster =+d.Cluster;
+  });
+
+  x.domain(d3.extent(data, function(d) { return d.position; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.changes; })).nice();
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("Rider's Final Place");
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Number of Place Changes")
+
+  svg.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 3.5)
+      .attr("cx", function(d) { return x(d.position); })
+      .attr("cy", function(d) { return y(d.changes); })
+      .style("fill", function(d) { return color(d.cluster); });
+	  
+
+  
+
+});
+
+</script>
