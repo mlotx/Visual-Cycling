@@ -18,32 +18,17 @@ body {
 }
 
 </style>
-<body>
-<div style="text-align: center;">
-<a href="../index.php"><img class="banner" src="../images/logo.png"/></a>
-</div>
-
-
-<div align="right">
-			<select id="race">
-			<option value="Kilometer"  >Kilometer</option>
-			<option value="IndividualPursuit" selected>Individual Pursuit</option>
-			<option value="TeamPursuit">Team Pursuit</option>
-			<option value="TeamSprint">Team Sprint</option>
-			</select>
-			<select id="place">
-			<option value="1"  >First Place</option>
-			<option value="2" selected>Second Place</option>
-			<option value="3">Third Place</option>
-			</select>
-			<form><input type=button value="Submit" onClick="history.go()"></form> 
-
-
-
-
-
 <script src="d3/d3.v3.js"></script>
 <script>
+function generateMyGraph(){
+            element = document.getElementById("mysvg");
+            element.parentNode.removeChild(element);
+            createGraph()
+}
+
+
+
+function createGraph(){
 
 var margin = {top: 70, right: 20, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
@@ -68,6 +53,8 @@ var yAxis = d3.svg.axis()
 var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
+    .attr("id","mysvg")
+    .attr("style","display: block; margin: auto;")    
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 	
@@ -136,5 +123,35 @@ d3.csv(filename, function(data) {
   
 
 });
-
+}
 </script>
+
+<body>
+<div style="text-align: center;">
+<a href="../index.php"><img class="banner" src="../images/logo.png"/></a>
+</div>
+
+
+<div align="right">
+			<select id="race">
+			<option value="Kilometer"  >Kilometer</option>
+			<option value="IndividualPursuit" selected>Individual Pursuit</option>
+			<option value="TeamPursuit">Team Pursuit</option>
+			<option value="TeamSprint">Team Sprint</option>
+			</select>
+			<select id="place">
+			<option value="1"  >First Place</option>
+			<option value="2" selected>Second Place</option>
+			<option value="3">Third Place</option>
+			</select>
+			<form><input type=button value="Submit" onClick="generateMyGraph()"></form> 
+</div>
+<script>
+createGraph()
+</script>
+</html>
+
+
+
+
+
