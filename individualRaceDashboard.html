@@ -151,6 +151,7 @@
 		
 		if(change === false){
 			alert("Sorry! That event does not exist.");
+			
 		}
 		
 		d3.csv("IndividualRaceDashboardData\\"+filename+".csv", function(data){
@@ -175,6 +176,16 @@
 						d3.max(teams, function(c) { return d3.max(c.values, function(v) { return v.place; }); })
 					  ]);
 
+					  svg.append("text")
+						.attr("x", (width / 2))             
+						.attr("y", 0 - (margin.top / 2))
+						.attr("text-anchor", "middle")  
+						.style("font-size", "16px") 
+						.style("text-decoration", "underline")  
+						.text(filename);
+					  
+					  
+					  
 					  svg.append("g")
 						  .attr("class", "x axis")
 						  .attr("text-anchor", "middle")
@@ -184,7 +195,7 @@
 						  .attr("x", width/2)
 						  .attr("y", 30 )
 						  
-						  .text("Lap");
+						  .text("Meters");
 
 					  svg.append("g")
 						  .attr("class", "y axis")
