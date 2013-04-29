@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+.arc path {
+  stroke: #fff;
+}
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var width = 960,
+    height = 500,
+    radius = Math.min(width, height) / 2;
+
+var color = d3.scale.ordinal()
+    .range([" #d62728", "#8a89a6", "#1f77b4"]);
+
+var arc = d3.svg.arc()
+    .outerRadius(radius - 10)
+    .innerRadius(0);
+
+var pie = d3.layout.pie()
+    .sort(null)
+    .value(function(d) { return d.num, d.dem; });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+var eventtype = "menkilo"
+d3.csv("csvs\\rulessmaller.csv", function(error, data) {
+
+
+  data.forEach(function(d) {
+    d.event= +d.Event;
+	d.cause = +d.Cause;
+	d.effect = +d.Effect;
+	d.conf = +d.Conf;
+	d.num = +d.Conf_Num;
+	d.dem = +d.Conf_Dem;
+	
+  });
+
+
+  
+  var g = svg.selectAll(".arc")
+      .data(pie(data))
+    .enter().append("g")
+      .attr("class", "arc");
+
+  g.append("path")
+      .attr("d", arc)
+      .style("fill", function(d) { return color(d.data.num, d.data.dem); });
+
+  //g.append("text")
+    //  .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
+     // .attr("dy", ".35em")
+      //.style("text-anchor", "middle")
+      //.text(function(d) { return d.data.age; });
+
+});
+
+</script>
